@@ -1,0 +1,6 @@
+DELAY_REQUISICAO = 4 # em segundos
+MAX_REQUISICAO = 5 # Para testes
+
+URL_ORIGEM_UFSM_PORTAL = "https://www.ufsm.br/"
+
+ARQUIVO_URLS_VISITADAS = "src\database\links_ufsm,.json"
