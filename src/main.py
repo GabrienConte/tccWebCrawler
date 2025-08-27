@@ -1,5 +1,6 @@
 from src.crawler.crawler_distribuido import CrawlerUFSM
 from src.database.db_handler import DbHandler
+import src.crawler.url_gerenciador as url_gerenciador
 
 def main():
     url = "https://www.ufsm.br/"
@@ -10,15 +11,20 @@ def main():
 
     url_visitada = [
         {
-        "link": "https://www.teste.br/"
+        "link": "https://www.teste.br/",
+        },
+         {
+        "link": "https://www.ufsm.br/",
         }
     ]
 
-    db.set_urls_visitadas(url_visitada)
+    scrapper.craw_paginas_ufsm()
 
-    ler =  db.get_urls_visitadas()
+    #print(url_gerenciador.carrega_urls_visitadas())
 
-    print(ler)
+    #db.set_urls_visitadas(url_visitada)
+
+    #print(url_gerenciador.carrega_urls_visitadas())
     #teste = scrapper.fazer_requisicao(url)
 
 if __name__ == "__main__":
