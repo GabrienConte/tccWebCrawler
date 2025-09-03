@@ -16,7 +16,7 @@ class CrawlerUFSM:
             'Accept-Language': 'pt-BR,pt;q=0.9'
         }
         self.urls_visitadas = url_gerenciador.carrega_urls_visitadas()
-        self.urls_para_visitar = [configuracoes.URL_BASE_UFSM_PORTAL]
+        self.urls_para_visitar = url_gerenciador.carrega_urls_nao_visitadas()
 
     def _fazer_requisicao(self, url: str) -> str:
         try:
@@ -68,19 +68,27 @@ class CrawlerUFSM:
                     print(f"URL A SER RECOLHIDA OS LINK {url}")
                     links_paginas = self._get_links_from_url(url)
 
+                    links_paginas.sort()
+
                     for link in links_paginas:
                         if link not in self.urls_para_visitar and link not in self.urls_visitadas:
                             self.urls_para_visitar.append(link)
 
                     removida = self.urls_para_visitar.pop(0)
                     print(f"[LOG] URL removida da lista: {removida}")
+                    self.urls_visitadas.append(removida)
+                    print(f"[LOG] URL salva na lista de URLs Visitadas: {removida}")
                 except Exception as e:
                     print(f"Falha ao extrair a url: {url} Erro: {e}")
                     break
                 finally:
                     count_urls += 1
                     time.sleep(5)
-                        
+            print(f"[LOG] Salva lista DE URLs visitadas até o momento")
+            url_gerenciador.salva_urls_visitadas(self.urls_visitadas)
+
+            print(f"[LOG] Salva lista DE URLs NAO visitadas até o momento")
+            url_gerenciador.salva_urls_nao_visitadas(self.urls_para_visitar)                   
         except Exception as e:
             print(f"Falha na extração: {e}")
         
