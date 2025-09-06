@@ -11,3 +11,4 @@ DATABASE_DIR = BASE_DIR / "src" / "database"
 
 ARQUIVO_URLS_VISITADAS = DATABASE_DIR / "links_ufsm_visitados.json"
 ARQUIVO_URLS_NAO_VISITADAS = DATABASE_DIR / "links_nao_visitados.json"
+ARQUIVO_URLS_COM_ERRO = DATABASE_DIR / "links_com_erro.json"
