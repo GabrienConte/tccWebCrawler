@@ -1,35 +1,29 @@
 from typing import List
 from src.database.db_handler import DbHandler
+from src.models import UrlInfo
 
 db = DbHandler()
 
-# REGIAO URL VISITADAS
-def carrega_urls_visitadas() -> List[str]:
+# VISITADAS
+def carrega_urls_visitadas() -> List[UrlInfo]:
     urls_dict = db.get_urls_visitadas()
-    urls_formatada = list[str]()
+    return [UrlInfo.from_dict(d) for d in urls_dict]
 
-    for url_dict in urls_dict:
-        urls_formatada.append(url_dict["link"])
+def salva_urls_visitadas(lista_urls_visitadas: List[UrlInfo]):
+    db.set_urls_visitadas([u.to_dict() for u in lista_urls_visitadas])
 
-    return urls_formatada
-
-def salva_urls_visitadas(lista_urls_visitadas: List[str]):
-    lista_urls_visitadas_formatada = [{"link": url} for url in lista_urls_visitadas]
-    db.set_urls_visitadas(lista_urls_visitadas_formatada)
-# FIM REGIAO
-
-
-# REGIAO URL NAO VISITADAS
-def carrega_urls_nao_visitadas() -> List[str]:
+# NÃO VISITADAS
+def carrega_urls_nao_visitadas() -> List[UrlInfo]:
     urls_dict = db.get_urls_nao_visitadas()
-    urls_formatada = list[str]()
+    return [UrlInfo(link=d["link"]) for d in urls_dict]
 
-    for url_dict in urls_dict:
-        urls_formatada.append(url_dict["link"])
+def salva_urls_nao_visitadas(lista_urls_nao_visitadas: List[UrlInfo]):
+    db.set_urls_nao_visitadas([{"link": u.link} for u in lista_urls_nao_visitadas])
 
-    return urls_formatada
+# COM ERRO
+def carrega_urls_com_erro() -> List[UrlInfo]:
+    urls_dict = db.get_urls_com_erro()
+    return [UrlInfo.from_dict(d) for d in urls_dict]
 
-def salva_urls_nao_visitadas(lista_urls_visitadas: List[str]):
-    lista_urls_nao_visitadas_formatada = [{"link": url} for url in lista_urls_visitadas]
-    db.set_urls_nao_visitadas(lista_urls_nao_visitadas_formatada)
-# FIM REGIAO
+def salva_urls_com_erro(lista_com_erro: List[UrlInfo]):
+    db.set_urls_com_erro([u.to_dict() for u in lista_com_erro])

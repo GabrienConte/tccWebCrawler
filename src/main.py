@@ -1,31 +1,15 @@
 from src.crawler.crawler_distribuido import CrawlerUFSM
 from src.database.db_handler import DbHandler
 import src.crawler.url_gerenciador as url_gerenciador
-
+import src.relatorio.gerador_relatorio as gerador_relatorio
 def main():
-    url = "https://www.ufsm.br/"
-
     scrapper = CrawlerUFSM()
 
-    db = DbHandler()
+    #scrapper.craw_paginas_ufsm()
 
-    url_visitada = [
-        {
-        "link": "https://www.teste.br/",
-        },
-         {
-        "link": "https://www.ufsm.br/",
-        }
-    ]
+    gerador_relatorio.relatorio_basico()
 
-    scrapper.craw_paginas_ufsm()
-
-    #print(url_gerenciador.carrega_urls_visitadas())
-
-    #db.set_urls_visitadas(url_visitada)
-
-    #print(url_gerenciador.carrega_urls_visitadas())
-    #teste = scrapper.fazer_requisicao(url)
+    #scrapper._filtrar_urls_proibidas()
 
 if __name__ == "__main__":
     main()
