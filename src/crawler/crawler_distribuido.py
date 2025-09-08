@@ -40,11 +40,11 @@ class CrawlerUFSM:
                 
         except URLError as e:
             logger.error(f"[_fazer_requisicao] Falha ao acessar {url_info.link}: {e}")
-            url_info.status = 0
+            url_info.status = url_info.status if url_info.status else 0
             return ""
         except Exception as e:
             logger.error(f"[_fazer_requisicao] Erro inesperado: {e}")
-            url_info.status = 0
+            url_info.status = url_info.status if url_info.status else 0
             return ""
 
     def _get_links_from_url(self, url_info: UrlInfo) -> List[UrlInfo]:
@@ -77,6 +77,10 @@ class CrawlerUFSM:
 
                     if any(href.lower().endswith(ext) for ext in configuracoes.DISALLOW_EXTENSIONS):
                         logger.info(f"[_get_links_from_url] Ignorando tipo de arquivo proibido: {href}")
+                        continue
+
+                    if configuracoes.BLOCK_QUERY_STRING and "?" in href:
+                        logger.info(f"[_get_links_from_url] Ignorando link com query string: {href}")
                         continue
 
                     links.add(href)
@@ -125,13 +129,22 @@ class CrawlerUFSM:
         except Exception as e:
             logger.error(f"[craw_paginas_ufsm] Falha no crawler: {e}")
 
-    def _filtrar_urls_proibidas(self):
-        """Remove de todas as listas e dos arquivos JSON as URLs que batem com os caminhos proibidos do robots.txt"""
+    def filtrar_urls_proibidas(self):
+        """Remove de todas as listas e dos arquivos JSON as URLs que contenham partes proibidas do robots.txt
+        ou terminem com extensões não permitidas (pdf, planilhas, docs etc.)"""
+
         def permitido(url_info: UrlInfo) -> bool:
-            return not any(
-                dis in url_info.link
-                for dis in configuracoes.DISALLOW_EXTENSIONS
-            )
+            # bloqueio por robots.txt
+            if any(dis in url_info.link for dis in configuracoes.DISALLOW_PATHS):
+                return False
+            # bloqueio por extensão
+            if any(url_info.link.lower().endswith(ext) for ext in configuracoes.DISALLOW_EXTENSIONS):
+                return False
+            
+            if configuracoes.BLOCK_QUERY_STRING and "?" in url_info.link:
+                return False
+            
+            return True
 
         antes_v = len(self.urls_visitadas)
         antes_nv = len(self.urls_para_visitar)
@@ -148,7 +161,7 @@ class CrawlerUFSM:
         url_gerenciador.salva_urls_com_erro(self.urls_com_erro)
 
         logger.info(
-            f"[ROBOTS] Filtradas URLs proibidas - "
+            f"[ROBOTS] Filtradas URLs proibidas/extensões - "
             f"visitadas: {antes_v}->{len(self.urls_visitadas)}, "
             f"não visitadas: {antes_nv}->{len(self.urls_para_visitar)}, "
             f"com erro: {antes_e}->{len(self.urls_com_erro)}"

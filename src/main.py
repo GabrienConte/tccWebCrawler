@@ -9,7 +9,7 @@ def main():
 
     gerador_relatorio.relatorio_basico()
 
-    #scrapper._filtrar_urls_proibidas()
+    #scrapper.filtrar_urls_proibidas()
 
 if __name__ == "__main__":
     main()

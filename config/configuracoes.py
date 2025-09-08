@@ -23,5 +23,8 @@ DISALLOW_PATHS = [
 ]
 
 DISALLOW_EXTENSIONS = [
-    ".pdf", ".xls", ".xlsx", ".csv", ".doc", ".docx", ".ods", ".odt", ".jpg", ".jpeg"
+    ".pdf", ".xls", ".xlsx", ".csv", ".doc", ".docx", ".ods", ".odt", ".jpg", ".jpeg", ".png"
 ]
+
+# Bloquear URLs com query string (?param=valor)
+BLOCK_QUERY_STRING = True
