@@ -86,7 +86,7 @@ class CrawlerUFSM:
                     links.add(href)
 
             logger.info(f"[_get_links_from_url] Total de links únicos extraídos: {len(links)}")
-            return [UrlInfo(link=l) for l in links]
+            return [UrlInfo(link=l, origem=url_info.link if url_info.link else "") for l in links]
         except Exception as e:
             logger.error(f"[_get_links_from_url] Falha na extração: {e}")
             return []
@@ -105,9 +105,14 @@ class CrawlerUFSM:
                     if url_info.status == 200:
                         self.urls_visitadas.append(url_info)
 
+                        urls_adicionadas_novas_por_pagina = 0
                         for nl in novos_links:
                             if all(nl.link != u.link for u in (self.urls_visitadas + self.urls_para_visitar + self.urls_com_erro)):
+                                logger.info(f"[craw_paginas_ufsm] URL não visitada: {nl.link} || Origem: {nl.origem}" )
                                 self.urls_para_visitar.append(nl)
+                                urls_adicionadas_novas_por_pagina += 1
+                            
+                        logger.info(f"[craw_paginas_ufsm] Total de links adicionados a lista de não visitados desta página: {urls_adicionadas_novas_por_pagina}")
                     else:
                         self.urls_com_erro.append(url_info)
 
@@ -141,30 +146,25 @@ class CrawlerUFSM:
             if any(url_info.link.lower().endswith(ext) for ext in configuracoes.DISALLOW_EXTENSIONS):
                 return False
             
+            if any(dis in url_info.origem for dis in configuracoes.DISALLOW_PATHS):
+                return False
+            
             if configuracoes.BLOCK_QUERY_STRING and "?" in url_info.link:
                 return False
             
             return True
 
-        antes_v = len(self.urls_visitadas)
         antes_nv = len(self.urls_para_visitar)
-        antes_e = len(self.urls_com_erro)
 
         # Filtra listas em memória
-        self.urls_visitadas = [u for u in self.urls_visitadas if permitido(u)]
         self.urls_para_visitar = [u for u in self.urls_para_visitar if permitido(u)]
-        self.urls_com_erro = [u for u in self.urls_com_erro if permitido(u)]
 
         # Sobrescreve os arquivos JSON já filtrados
-        url_gerenciador.salva_urls_visitadas(self.urls_visitadas)
         url_gerenciador.salva_urls_nao_visitadas(self.urls_para_visitar)
-        url_gerenciador.salva_urls_com_erro(self.urls_com_erro)
 
         logger.info(
             f"[ROBOTS] Filtradas URLs proibidas/extensões - "
-            f"visitadas: {antes_v}->{len(self.urls_visitadas)}, "
             f"não visitadas: {antes_nv}->{len(self.urls_para_visitar)}, "
-            f"com erro: {antes_e}->{len(self.urls_com_erro)}"
         )
 
         

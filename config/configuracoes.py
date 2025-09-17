@@ -19,11 +19,19 @@ DISALLOW_PATHS = [
     "/wp-includes/",
     "/wp-content",
     "/xmlrpc.php",
-    "/wp"
+    "/wp",
+    "/tag",
+    "/page",
+    "/palavrachave",
+    "ufsm.academia.edu",
+    "ufsmfutsal.blogspot.com",
+    "/docente",
+    "/autenticacao",
+    "jsessionid"
 ]
 
 DISALLOW_EXTENSIONS = [
-    ".pdf", ".xls", ".xlsx", ".csv", ".doc", ".docx", ".ods", ".odt", ".jpg", ".jpeg", ".png"
+    ".pdf", ".xls", ".xlsx", ".csv", ".doc", ".docx", ".ods", ".odt", ".jpg", ".jpeg", ".png", ".zip", ".rar", ".pptx", ".tar", ".gz", ".ppt", ".pptx"
 ]
 
 # Bloquear URLs com query string (?param=valor)

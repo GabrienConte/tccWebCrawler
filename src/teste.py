@@ -1,15 +1,7 @@
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
-import re
+from src.crawler.crawler_distribuido import CrawlerUFSM
+import src.relatorio.gerador_relatorio as gerador_relatorio
 
-html = urlopen("https://www.ufsm.br/")
-soup = BeautifulSoup(html, "html.parser")
+gerador_relatorio.relatorio_basico()
 
-body_find = soup.find('body')
-
-regex_href = re.compile(r'(https?\:\/\/(www\.)?(portal.)?ufsm[^\'\"]+)|(^\/[^\'\"]+)$', re.IGNORECASE)
-
-anchors = body_find.find_all('a', {'href': regex_href})
-
-for anchor in anchors:
-    print(anchor['href'])
+scrapper = CrawlerUFSM()
+# scrapper.filtrar_urls_proibidas()

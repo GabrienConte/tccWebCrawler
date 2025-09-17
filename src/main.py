@@ -5,11 +5,12 @@ import src.relatorio.gerador_relatorio as gerador_relatorio
 def main():
     scrapper = CrawlerUFSM()
 
-    #scrapper.craw_paginas_ufsm()
+    scrapper.craw_paginas_ufsm()
 
-    gerador_relatorio.relatorio_basico()
+    
+    # gerador_relatorio.relatorio_basico()
 
-    #scrapper.filtrar_urls_proibidas()
+    # scrapper.filtrar_urls_proibidas()
 
 if __name__ == "__main__":
     main()

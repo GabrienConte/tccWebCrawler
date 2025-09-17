@@ -5,6 +5,7 @@ from typing import Optional
 class UrlInfo:
     link: str
     status: Optional[int] = None
+    origem: Optional[str] = None
 
     def to_dict(self):
         return asdict(self)
@@ -13,5 +14,6 @@ class UrlInfo:
     def from_dict(data: dict) -> "UrlInfo":
         return UrlInfo(
             link=data["link"],
-            status=data.get("status")
+            status=data.get("status"),
+            origem=data.get("origem")
         )

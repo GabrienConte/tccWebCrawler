@@ -15,10 +15,10 @@ def salva_urls_visitadas(lista_urls_visitadas: List[UrlInfo]):
 # NÃO VISITADAS
 def carrega_urls_nao_visitadas() -> List[UrlInfo]:
     urls_dict = db.get_urls_nao_visitadas()
-    return [UrlInfo(link=d["link"]) for d in urls_dict]
+    return [UrlInfo.from_dict(d) for d in urls_dict]
 
 def salva_urls_nao_visitadas(lista_urls_nao_visitadas: List[UrlInfo]):
-    db.set_urls_nao_visitadas([{"link": u.link} for u in lista_urls_nao_visitadas])
+    db.set_urls_nao_visitadas([{"link": u.link, "origem": u.origem} for u in lista_urls_nao_visitadas])
 
 # COM ERRO
 def carrega_urls_com_erro() -> List[UrlInfo]:
